@@ -1,0 +1,25 @@
+import pandas as pd
+#Selecting specific columns from a dataframe
+budget = pd.read_csv('OCNR.csv', usecols = ['PO_ID', 'PO_Qty', 'Price', 'Activity_Type'])
+
+#Take a look at the head of the data and see what is going on
+budget.head()
+
+#Want to create a dummy variable for the Activity Type column
+
+budget.Activity_Type.value_counts()
+#Can see there are 4 activity types - RLEST, EQUIP, CNSER, TRNSP
+#Lets create new columns that represent which activity it is
+pd.get_dummies(budget.Activity_Type, prefix='Type')
+#We want 4 rows -1, do not need all of the columns
+pd.get_dummies(budget.Activity_Type, prefix='Type').iloc[:, 1:]
+
+#now that you have created this, how do I attach it to the dataframe???
+#Save it as a new file and then use concat
+Act_type = pd.get_dummies(budget.Activity_Type, prefix='Type').iloc[:, 1:]
+
+budget_update = pd.concat([budget, Act_type], axis=1)
+
+
+#Lets take a look to see if the new budget data has the activity type segments
+budget_update.head()
